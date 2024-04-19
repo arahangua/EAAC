@@ -128,3 +128,11 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+
+# python related
+__pycache__
+
+
+# mac
+.DS_Store
