@@ -1,0 +1,12 @@
+subject,predicate,object
+http://dbpedia.org/resource/Paris,rdfs:label,Paris
+http://dbpedia.org/resource/Paris,geo:locatedIn,http://dbpedia.org/resource/Seine_River
+http://dbpedia.org/resource/France,rdfs:label,France
+http://dbpedia.org/resource/France,owl:capital,http://dbpedia.org/resource/Paris
+http://dbpedia.org/resource/Seine_River,rdf:type,http://schema.org/River
+http://dbpedia.org/resource/Paris,rdf:type,http://schema.org/City
+http://dbpedia.org/resource/Seine_River,rdfs:label,Seine River
+http://dbpedia.org/resource/Paris,schema:description,city located along the Seine River in the north-central part of France
+http://dbpedia.org/resource/Paris,owl:sameAs,http://dbpedia.org/resource/Capital_of_France
+http://dbpedia.org/resource/France,schema:description,country of northwestern Europe with a rich history and culture that has influenced the world for centuries
+http://dbpedia.org/resource/France,rdf:type,http://schema.org/Country

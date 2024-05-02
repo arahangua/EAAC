@@ -1,4 +1,4 @@
-# autogen is not supported for now. As EAAC uses pydantic v2 for now. 
+# autogen is not supported for now as EAAC uses pydantic v2.
 import os,sys
 import dotenv
 dotenv.load_dotenv('../../../.env')
@@ -8,8 +8,7 @@ import autogen
 from autogen import AssistantAgent, UserProxyAgent
 
 # EAAC
-sys.path.append('../../../EAAC_wrapper')
-import EAAC
+import eaac
 
 print("autogen is not supported for now. As EAAC uses pydantic v2 for now.")
 
@@ -22,7 +21,7 @@ print("autogen is not supported for now. As EAAC uses pydantic v2 for now.")
 # )
 
 # # wrap agent with EAAC
-# EAAC_agent = EAAC.CustomAgentExecutor(user_proxy, identifier='test')
+# EAAC_agent = eaac.CustomAgentExecutor(user_proxy, identifier='test')
 
 
 # # Start the chat

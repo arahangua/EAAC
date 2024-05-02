@@ -1,59 +1,89 @@
 <script>
-	import Counter from './Counter.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+   import { onMount } from 'svelte';
+   import { Network} from 'vis-network';
+   import {DataSet} from 'vis-data';
+   
+   let results = [];
+   let container;
+   let network;
+
+    async function fetchQuery() {
+    const response = await fetch('http://localhost:8080/query', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+        query: 'MATCH (n)-[r]->(m) RETURN n,r,m',
+        parameters: {}
+        })
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        results = data.result;
+        console.log(data.result)
+        return data.result
+    } else {
+        console.error('Failed to fetch data');
+    }
+       
+    }
+    // Render graph
+    async function renderGraph(data){
+        const nodes = new DataSet();  // Use DataSet for managing nodes
+        const edges = new DataSet();  // Use DataSet for managing edges
+
+    data.forEach(entry => {
+        const sourceNode = { id: entry[0].Id, label: entry[0].Labels.join(", "), ...entry[0].Props };
+        const targetNode = { id: entry[2].Id, label: entry[2].Labels.join(", "), ...entry[2].Props };
+
+        if (!nodes.get(sourceNode.id)) {
+            nodes.update(sourceNode);
+        }
+        
+        if (!nodes.get(targetNode.id)) {
+            nodes.update(targetNode);
+        }
+
+        edges.add({ from: sourceNode.id, to: targetNode.id, label: entry[1].Type, ...entry[1].Props });
+    });
+
+    const graphData = {
+        nodes: nodes,
+        edges: edges
+    };
+  
+      network = new Network(container, graphData, {});
+
+    }
+
+    function updateGraph(newData) {
+    newData.forEach(entry => {
+        nodes.update({ id: entry.nodeId, label: entry.label, ...entry.properties });
+        if (entry.edge) {
+            edges.update({ from: entry.edge.startId, to: entry.edge.endId, label: entry.edge.label });
+        }
+    });
+
+    network.setData({ nodes, edges });
+    }
+
+
+
+    onMount(async () => {
+    const data = await fetchQuery();
+    // console.debug(data);
+    renderGraph(data);
+    });
 </script>
-
-<svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
-</svelte:head>
-
-<section>
-	<h1>
-		<span class="welcome">
-			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcome_fallback} alt="Welcome" />
-			</picture>
-		</span>
-
-		to your new<br />SvelteKit app
-	</h1>
-
-	<h2>
-		try editing <strong>src/routes/+page.svelte</strong>
-	</h2>
-
-	<Counter />
-</section>
-
-<style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
-	h1 {
-		width: 100%;
-	}
-
-	.welcome {
-		display: block;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
-	}
-
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
-	}
-</style>
+  
+<main>
+    <h1>Results from Neo4j:</h1>
+    {#each results as result}
+      <p>{JSON.stringify(result)}</p>
+    {/each}
+    <div bind:this={container} style="height: 500px;"></div> <!-- Graph container -->
+    
+</main>
+  

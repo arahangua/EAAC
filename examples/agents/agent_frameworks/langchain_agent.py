@@ -11,8 +11,7 @@ from langchain_community.tools import DuckDuckGoSearchRun # somehow langchain-co
 from langchain.agents import Tool
 
 # EAAC
-sys.path.append('../../../EAAC_wrapper')
-import EAAC
+import eaac
 
 
 #prompt
@@ -38,7 +37,7 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, return_in
 
 
 # Wrap the AgentExecutor
-EAAC_agent_executor = EAAC.CustomAgentExecutor(agent_executor, identifier='test')
+EAAC_agent_executor = eaac.CustomAgentExecutor(agent_executor, identifier='test')
 
 # Use the wrapped executor
 response = EAAC_agent_executor.invoke({"input": "What is the capital of France?"})

@@ -21,6 +21,11 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"svelte-web3": "^4.3.1"
+		"dotenv": "^16.4.5",
+		"neo4j-driver": "^5.20.0",
+		"svelte-web3": "^4.3.1",
+		"vis-data": "^7.1.9",
+		"vis-network": "^9.1.9",
+		"vis-util": "^5.0.7"
 	}
 }

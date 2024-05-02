@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+  xmlns:ns1="owl:"
+  xmlns:ns2="rdfs:"
+  xmlns:ns3="geo:"
+  xmlns:ns4="rdf:"
+  xmlns:ns5="schema:"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/France">
+    <ns4:type rdf:resource="http://schema.org/Country"/>
+    <ns2:label>France</ns2:label>
+    <ns1:capital>
+      <rdf:Description rdf:about="http://dbpedia.org/resource/Paris">
+        <ns4:type rdf:resource="http://schema.org/City"/>
+        <ns2:label>Paris</ns2:label>
+        <ns1:sameAs rdf:resource="http://dbpedia.org/resource/Capital_of_France"/>
+        <ns3:locatedIn rdf:resource="http://dbpedia.org/resource/Seine_River"/>
+        <ns5:description>city located along the Seine River in the north-central part of France</ns5:description>
+      </rdf:Description>
+    </ns1:capital>
+    <ns5:description>country of northwestern Europe with a rich history and culture that has influenced the world for centuries</ns5:description>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Seine_River">
+    <ns4:type rdf:resource="http://schema.org/River"/>
+    <ns2:label>Seine River</ns2:label>
+  </rdf:Description>
+</rdf:RDF>

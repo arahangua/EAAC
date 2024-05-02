@@ -9,8 +9,7 @@ from langchain.agents import Tool
 os.environ["OPENAI_MODEL_NAME"]="gpt-3.5-turbo"
 
 # EAAC
-sys.path.append('../../../EAAC_wrapper')
-import EAAC
+import eaac
 
 
 search = DuckDuckGoSearchRun()
@@ -97,7 +96,7 @@ crew = Crew(
 )
 
 # wrap the crew class
-EAAC_crew = EAAC.CustomAgentExecutor(crew, identifier='crewai_test')
+EAAC_crew = eaac.CustomAgentExecutor(crew, identifier='crewai_test')
 
 
 # Starting the task execution process with enhanced feedback

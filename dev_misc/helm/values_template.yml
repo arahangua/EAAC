@@ -1,0 +1,26 @@
+cluster:
+  enabled: true
+  coreMembers: 3
+  readReplicas: 2
+
+persistence:
+  enabled: true
+  size: 10Gi
+
+networkPolicy:
+  enabled: true
+
+service:
+  type: ClusterIP
+
+env:
+  - name: CLUSTER_ENABLED
+    value: "true"
+  - name: CORE_MEMBERS
+    value: "3"
+  - name: READ_REPLICAS
+    value: "2"
+
+
+# helm upgrade --install my-database ./path/to/chart -f values.yaml
+# https://github.com/DozerDB/helm-charts

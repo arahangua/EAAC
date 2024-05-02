@@ -6,25 +6,44 @@ import json
 from eth_account import Account
 import requests
 # EAAC parser
-import agent_parser
+from . import agent_parser
+
+
+def check_env_variable(var_name):
+    # Attempt to retrieve the environment variable using os.getenv()
+    value = os.getenv(var_name)
+    # Check if the environment variable is None (not set)
+    if value is None:
+        # Raise an exception with a custom error message
+        raise EnvironmentError(f"Required environment variable '{var_name}' is not set.")
+    
+def check_ipfs_node():
+    try:
+        ipfs_node = os.getenv('IPFS_NODE')
+        response = requests.post(f"http://127.0.0.1:5001/api/v0/version", timeout=5)  # Set a timeout for the request
+        return response.status_code
+
+    except requests.exceptions.RequestException as e:
+        raise f"Failed to connect to IPFS node: {e}"
 
 
 # global vars
 # ABI
+check_env_variable('EAAC_ABI_PATH')
 EAAC_ABI_PATH=os.getenv('EAAC_ABI_PATH')
 f=open(EAAC_ABI_PATH)
 EAAC_ABI = json.load(f)
 EAAC_ABI = EAAC_ABI['abi']
 
 #IPFS node
+check_env_variable('IPFS_NODE')
 IPFS_NODE= os.getenv('IPFS_NODE')
 
 # EAAC deployment address
+check_env_variable('EAAC_ADDR')
 EAAC_ADDR = os.getenv('EAAC_ADDR')
 
-
-
-
+# env_vars = ['EAAC_ABI_PATH', 'IPFS_NODE', 'EAAC_ADDR']
 
 #upload to ipfs
 def upload_to_ipfs(file_path):
@@ -109,7 +128,14 @@ class CustomAgentExecutor:
         self.identifier = identifier
         # self.register_to_EAAC(self.identifier) # for the downstream on-chain interaction we need to get approval. (not used for now)
         self.output_file = f'{output_path}/report.json'
-    
+
+        # check necessary conditions
+        # for env_var in env_vars:
+        #     check_env_variable('EAAC_ABI_PATH')
+        response = check_ipfs_node()
+        if(response==200):
+            print("All env variables are set and IPFS node is functional. EAAC ready.")
+
     def __getattr__(self, name):
         """Delegate attribute access to the original AgentExecutor object."""
         attr = getattr(self.agent_executor, name)
@@ -130,31 +156,43 @@ class CustomAgentExecutor:
     # not used for now as registering step currently doesn't serve unique purpose
     def register_to_EAAC(self, identifier:str=None):
         contract = self.w3.eth.contract(address=EAAC_ADDR, abi=EAAC_ABI)
-        account = Account.from_key(os.getenv('PRIVATE_KEY')).address
+        account = Account.from_key(os.getenv('PRIVATE_KEY'))
         print(account)
         
         # Call the function
-        if identifier is None:
-            result = contract.functions.register_agent_generic(account).call()
-            print(f"Registered agent (generic) to EAAC")
-        # case users want to put unique identifier for their agent/agent group
-        else:
-            result = contract.functions.register_agent(account, identifier).call()
-            print(f"Registered agent {identifier} to EAAC")
+        # if identifier is None:
+        #     fn = contract.functions.register_agent_generic(account)
+            # tx = self.build_tx(account, fn)
+            # tx_hash = self.sign_send_tx(tx,account)
+            # tx_receipt = self.get_tx_receipt(tx_hash)
+        #     print(f"Registered agent (generic) to EAAC")
+        # # case users want to put unique identifier for their agent/agent group
+        # else:
+        #     fn = contract.functions.register_agent(account, identifier)
+        #     tx = self.build_tx(account, fn)
+            # tx_hash = self.sign_send_tx(tx,account)
+            # tx_receipt = self.get_tx_receipt(tx_hash)
+        #     print(f"Registered agent {identifier} to EAAC")
 
 
     def report_to_EAAC(self,ipfs_hash:str, identifier:str=None):
         contract = self.w3.eth.contract(address=EAAC_ADDR, abi=EAAC_ABI)
-        account = Account.from_key(os.getenv('PRIVATE_KEY')).address
+        account = Account.from_key(os.getenv('PRIVATE_KEY'))
         
         # Call the function
         if identifier is None:
-            result = contract.functions.report_activity_generic(account,ipfs_hash).call()
+            fn = contract.functions.report_activity_generic(account.address,ipfs_hash)
+            tx = self.build_tx(account, fn)
+            tx_hash = self.sign_send_tx(tx,account)
+            tx_receipt = self.get_tx_receipt(tx_hash)
             print(f"Reported activity of the agent (generic) to EAAC")
         # case users want to put unique identifier for their agent/agent group
         else:
-            result = contract.functions.report_activity(account, identifier, ipfs_hash).call()
-            print(f"Reported activity of the agent {identifier} to EAAC")
+            fn = contract.functions.report_activity(account.address, identifier, ipfs_hash)
+            tx = self.build_tx(fn, account)
+            tx_hash = self.sign_send_tx(tx,account)
+            tx_receipt = self.get_tx_receipt(tx_hash)
+            print(f"Reported activity of the agent (generic) to EAAC")
 
 
         
@@ -195,3 +233,24 @@ class CustomAgentExecutor:
         # report with the resulting ipfs hash
         self.report_to_EAAC(ipfs_hash, self.identifier)
         print("Reported activity to EAAC")
+
+
+    def build_tx(self, fn_with_input, account):
+        tx = fn_with_input.build_transaction({
+              'chainId': int(os.getenv('CHAIN_ID')),  # Sepolia chainID
+                'gas': 2000000,
+                'gasPrice': self.w3.to_wei('50', 'gwei'),
+                'nonce': self.w3.eth.get_transaction_count(account.address),
+            })
+        return tx
+
+    def sign_send_tx(self, tx, account):
+        signed_tx = self.w3.eth.account.sign_transaction(tx, os.getenv('PRIVATE_KEY'))
+        tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        print(f'Transaction hash: {tx_hash.hex()}')
+        return tx_hash
+
+    def get_tx_receipt(self, tx_hash):
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        print(f'Transaction receipt: {tx_receipt}')
+        return tx_receipt
