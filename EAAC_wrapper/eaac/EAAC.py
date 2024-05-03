@@ -8,6 +8,21 @@ import requests
 # EAAC parser
 from . import agent_parser
 
+# global vars
+# ABI
+check_env_variable('EAAC_ABI_PATH')
+EAAC_ABI_PATH=os.getenv('EAAC_ABI_PATH')
+f=open(EAAC_ABI_PATH)
+EAAC_ABI = json.load(f)
+EAAC_ABI = EAAC_ABI['abi']
+
+#IPFS node
+check_env_variable('IPFS_NODE')
+IPFS_NODE= os.getenv('IPFS_NODE')
+
+# EAAC deployment address
+check_env_variable('EAAC_ADDR')
+EAAC_ADDR = os.getenv('EAAC_ADDR')
 
 def check_env_variable(var_name):
     # Attempt to retrieve the environment variable using os.getenv()
@@ -25,23 +40,6 @@ def check_ipfs_node():
 
     except requests.exceptions.RequestException as e:
         raise f"Failed to connect to IPFS node: {e}"
-
-
-# global vars
-# ABI
-check_env_variable('EAAC_ABI_PATH')
-EAAC_ABI_PATH=os.getenv('EAAC_ABI_PATH')
-f=open(EAAC_ABI_PATH)
-EAAC_ABI = json.load(f)
-EAAC_ABI = EAAC_ABI['abi']
-
-#IPFS node
-check_env_variable('IPFS_NODE')
-IPFS_NODE= os.getenv('IPFS_NODE')
-
-# EAAC deployment address
-check_env_variable('EAAC_ADDR')
-EAAC_ADDR = os.getenv('EAAC_ADDR')
 
 # env_vars = ['EAAC_ABI_PATH', 'IPFS_NODE', 'EAAC_ADDR']
 

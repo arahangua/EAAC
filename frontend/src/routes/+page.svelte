@@ -58,18 +58,6 @@
 
     }
 
-    function updateGraph(newData) {
-    newData.forEach(entry => {
-        nodes.update({ id: entry.nodeId, label: entry.label, ...entry.properties });
-        if (entry.edge) {
-            edges.update({ from: entry.edge.startId, to: entry.edge.endId, label: entry.edge.label });
-        }
-    });
-
-    network.setData({ nodes, edges });
-    }
-
-
 
     onMount(async () => {
     const data = await fetchQuery();
@@ -80,9 +68,9 @@
   
 <main>
     <h1>Results from Neo4j:</h1>
-    {#each results as result}
+    <!-- {#each results as result}
       <p>{JSON.stringify(result)}</p>
-    {/each}
+    {/each} -->
     <div bind:this={container} style="height: 500px;"></div> <!-- Graph container -->
     
 </main>

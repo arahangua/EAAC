@@ -40,5 +40,5 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, return_in
 EAAC_agent_executor = eaac.CustomAgentExecutor(agent_executor, identifier='test')
 
 # Use the wrapped executor
-response = EAAC_agent_executor.invoke({"input": "What is the capital of France?"})
+response = EAAC_agent_executor.invoke({"input": "Can you tell me about the capital of France?"})
 
