@@ -6,7 +6,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
 import numpy as np
 from langchain_text_splitters import TokenTextSplitter
-from rdflib import Graph, URIRef, Literal, RDF, RDFS
+from rdflib import Graph, URIRef, Literal, RDF, RDFS, Namespace
 import csv
 
 def llama3_70b_parse(nl_report): # context window of 8192 tokens
@@ -40,27 +40,50 @@ def extract_triplets(nl_report):
     # Define the namespace for schema
     # SCHEMA = URIRef("http://schema.org/")
 
-    
+    NS = Namespace("http://eaac.org/") # for literal like predicates
+
     # Parse the string into RDF triples
     for line in concat_str.strip().split('\n'):
-        if('<' in line):
-            subject, predicate, object_ = line.strip('.').split(' ', 2)
-            
-            subject = URIRef(subject.strip('<>'))
-            predicate = URIRef(predicate.strip('<>'))
-            object_ = object_.strip()
-    
-            if object_.startswith('<'):
-                object_ = URIRef(object_.strip('<>'))
-            else:
-                # Remove leading and trailing quotes from literals
-                object_ = Literal(object_.strip('"'))
-            g.add((subject, predicate, object_))
-            print(subject, predicate, object_)
+        line = line.strip()
+        if '.' in line:
+            line = line.split('.', 1)[1].strip()  # Remove the numbering part
+            if '<' in line:
+                # Split around the first '<' to get predicate and object
 
+                subject_part, predicate_object_part = line.split('>', 1)
+                subject_stripped= subject_part.strip('<>')
+                subject = URIRef(subject_stripped.replace(' ', '_'))
+                
+                # Split predicate and object
+                if '<' in predicate_object_part:
+                    predicate, object_ = predicate_object_part.split('<', 1)
+                    predicate_stripped = predicate.strip(' ')
+                    predicate = predicate_stripped.strip('<>')
+                else: 
+                    predicate, object_ = predicate_object_part.split('"', 1)
+                    predicate_stripped = predicate.strip(' ')
+                    predicate = predicate_stripped.strip('<>')
+                
+                if(':' in predicate):
+                    predicate = URIRef(predicate)
+                else:
+                    predicate = NS[predicate]
 
-    # Serialize the graph to RDF/XML format
-    # print(g.serialize(format='pretty-xml'))
+                # Handle object, either as URI or literal
+                if '>' in object_:
+                    object_stripped = object_.strip('<>')
+                    object_stripped = object_stripped.strip(' ')
+                    object_ = URIRef(object_stripped.replace(' ', '_'))
+                    
+
+                else:
+                    # Correctly remove leading and trailing quotes and any surrounding spaces
+                    object_ = object_.strip().strip('"')
+                    object_ = Literal(object_.replace(' ', '_'))
+
+                g.add((subject, predicate, object_))
+                print(subject, predicate, object_)
+       
     rdf_serialized= g.serialize(format='pretty-xml', encoding='utf-8')
     return rdf_serialized
 

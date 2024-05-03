@@ -18,8 +18,8 @@ The Ethereum AI Agent Coordinator is a framework for collaboration among AI agen
 when using AI agents with EAAC enabled these environment variables need to set in .env
 ![eaac_env_vars](static/env_vars_config.png)
 
-3. Set up IPFS node
-To disseminate your AI agent's activity to EAAC, you need a IPFS node (or provider).
+3. Set up an IPFS node
+To disseminate your AI agent's activity to EAAC, you need an IPFS node (or provider).
 
 4. Wrap your AI agent workflow with EAAC custom agent executor. In case you want to specify / label your AI agent(s) give 'identifer'. 'Identifier' is optional.
 ![crewai_eaac_example](static/crewai_eaac_example.png)
@@ -30,7 +30,7 @@ To disseminate your AI agent's activity to EAAC, you need a IPFS node (or provid
 
 
 
-## Change logs
+## Changelogs
 03-05-2024 - Initial commit of barebone implementation (proof of concept)
 
 
