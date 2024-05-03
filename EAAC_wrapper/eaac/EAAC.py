@@ -8,21 +8,6 @@ import requests
 # EAAC parser
 from . import agent_parser
 
-# global vars
-# ABI
-check_env_variable('EAAC_ABI_PATH')
-EAAC_ABI_PATH=os.getenv('EAAC_ABI_PATH')
-f=open(EAAC_ABI_PATH)
-EAAC_ABI = json.load(f)
-EAAC_ABI = EAAC_ABI['abi']
-
-#IPFS node
-check_env_variable('IPFS_NODE')
-IPFS_NODE= os.getenv('IPFS_NODE')
-
-# EAAC deployment address
-check_env_variable('EAAC_ADDR')
-EAAC_ADDR = os.getenv('EAAC_ADDR')
 
 def check_env_variable(var_name):
     # Attempt to retrieve the environment variable using os.getenv()
@@ -42,6 +27,21 @@ def check_ipfs_node():
         raise f"Failed to connect to IPFS node: {e}"
 
 # env_vars = ['EAAC_ABI_PATH', 'IPFS_NODE', 'EAAC_ADDR']
+# global vars
+# ABI
+check_env_variable('EAAC_ABI_PATH')
+EAAC_ABI_PATH=os.getenv('EAAC_ABI_PATH')
+f=open(EAAC_ABI_PATH)
+EAAC_ABI = json.load(f)
+EAAC_ABI = EAAC_ABI['abi']
+
+#IPFS node
+check_env_variable('IPFS_NODE')
+IPFS_NODE= os.getenv('IPFS_NODE')
+
+# EAAC deployment address
+check_env_variable('EAAC_ADDR')
+EAAC_ADDR = os.getenv('EAAC_ADDR')
 
 #upload to ipfs
 def upload_to_ipfs(file_path):
@@ -237,7 +237,7 @@ class CustomAgentExecutor:
         tx = fn_with_input.build_transaction({
               'chainId': int(os.getenv('CHAIN_ID')),  # Sepolia chainID
                 'gas': 2000000,
-                'gasPrice': self.w3.to_wei('50', 'gwei'),
+                'gasPrice': self.w3.to_wei('100', 'gwei'),
                 'nonce': self.w3.eth.get_transaction_count(account.address),
             })
         return tx
