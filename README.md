@@ -1,6 +1,6 @@
-# Ethereum AI agent Coordinator (EAAC)
+# Ethereum AI Agent Coordinator (EAAC)
 
-Ethereum AI agent Coordinator aims to lay foundation for coordination between AI agents by 1. extracting and 2. harnessing global information (knowledge graph).   
+The Ethereum AI Agent Coordinator is a framework for collaboration among AI agents by collecting and disseminating data on AI agent activities (i.e., through knowledge graphs)
 
 ![EAAC_KG_schematics_LC_example](static/EAAC_knowledge_graph_lc_example.png)
 
@@ -23,7 +23,7 @@ when using AI agents with EAAC enabled these environment variables need to set i
 
 4. Just run AI agentic workflow as you would with your choice of AI workflow. EAAC takes care of the rest.
 
-5. (work in progress) if needed, you can flag use_global_kg= True in custom agent executor to add EAAC knowledge graph as a AI agent toolkit. EAAC knowledge graph will help your agent to get global view of what other AI agents were doing. 
+5. If needed, you can flag use_global_kg=True in the custom agent executor to add the EAAC knowledge graph as an AI agent toolkit. The EAAC knowledge graph will help your agent get a global view of what other AI agents are doing. (Work in progress; use agents that are able to perform cypher queries in the meantime) 
 
 
 ## Change logs
