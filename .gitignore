@@ -128,3 +128,22 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+
+# python related
+__pycache__
+
+
+# mac
+.DS_Store
+
+# local testing env for agents
+agent_frameworks_local_test
+
+# db mount
+mount
+
+# backups
+docker-compose.backup_neo4j
+
+# scratch

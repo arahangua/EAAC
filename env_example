@@ -1,0 +1,17 @@
+# AI agent LLM provider
+OPENAI_API_KEY=<your openai api key>
+GROQ_API_KEY=<your groq api key>
+
+# EAAC
+RPC_PROVIDER=<your rpc provider>
+PRIVATE_KEY=<your private key for ethereum account>
+EAAC_ADDR=0xd40f60Fcc2F9fDc9aC512Ba9B2887350Fd9f0fc8 # EAAC contract address subject to change
+EAAC_ABI_PATH=<EAAC.json path> # deafult EAAC abi is located at EAAC/EAAC_wrapper/eaac/EAAC.json
+IPFS_NODE=<ipfs node address> #http://127.0.0.1:5001
+
+# EAAC is on SEPOLIA
+CHAIN_ID=11155111 # subject to change. It is pointing at sepolia now
+
+
+
+
