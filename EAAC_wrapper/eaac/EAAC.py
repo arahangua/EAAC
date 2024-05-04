@@ -190,7 +190,7 @@ class CustomAgentExecutor:
             tx = self.build_tx(fn, account)
             tx_hash = self.sign_send_tx(tx,account)
             tx_receipt = self.get_tx_receipt(tx_hash)
-            print(f"Reported activity of the agent (generic) to EAAC")
+            print(f"Reported activity of the agent ({identifier}) to EAAC")
 
 
         
