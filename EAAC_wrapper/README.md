@@ -7,7 +7,7 @@ EAAC_wrapper is a Python package that provides wrapper methods to interact with 
 - Easy integration with major AI agent frameworks.
 - Extensible design for future growth and compatibility with additional frameworks.
 
-## Installation
+## Installation (work in progress)
 
 You can install EAAC_wrapper directly from PyPI:
 
