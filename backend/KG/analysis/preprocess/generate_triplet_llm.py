@@ -56,8 +56,8 @@ def extract_triplets(nl_report):
             subject = URIRef(subject_stripped.replace(' ', '_'))
             
             # Split predicate and object
-            if '<' in predicate_object_part:
-                predicate, object_ = predicate_object_part.split('<', 1)
+            if '>' == predicate_object_part[-1]:
+                predicate, object_ = predicate_object_part.rsplit('<', 1)
                 predicate_stripped = predicate.strip(' ')
                 predicate = predicate_stripped.strip('<>. ')
             else: 
