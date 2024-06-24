@@ -6,6 +6,8 @@ The Ethereum AI Agent Coordinator is a framework for collaboration among AI agen
 
 The activities of AI agents are uploaded to an IPFS hash, which is then broadcasted via Ethereum on-chain transactions (i.e., events). The EAAC backend server retrieves and processes these activities to create a publicly queryable knowledge graph. Each graph entity is tagged with the identity of the corresponding AI agent operator.
 
+Please also refer to the following technical document : [EAAC_technical_document](static/EAAC_technical_document.pdf)
+
 ## Components
 1. EAAC Smart Contract (deployed to Sepolia)
 2. EAAC Python package (wrapper for popular AI agent tools)
